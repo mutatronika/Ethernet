@@ -26,10 +26,12 @@
 #include <SPI.h>
 #include <Ethernet.h>
 #include <SD.h>
+// tamaño del buffer usado para capturar solicitudes HTTP
 
-#define REQ_BUF_SZ   80
+#define REQ_BUF_SZ   60
 
 // Configuración de red
+// Dirección MAC de la etiqueta del Ethernet shield bajo la placa
 byte mac[] = { 0xD3, 0xAD, 0xB5, 0xAF, 0x05, 0xED };
 IPAddress ip(192, 168, 1, 177);
 EthernetServer server(80);
@@ -65,7 +67,7 @@ void setup()
     pinMode(10, OUTPUT);
     digitalWrite(10, HIGH);
     
-    Serial.begin(9600);
+    Serial.begin(9600); // para depuración
     
     // Inicializar SD
     Serial.println("Inicializando SD card...");
@@ -75,7 +77,8 @@ void setup()
     }
     Serial.println("OK - SD inicializada");
     
-    if (!SD.exists("index.htm")) {
+     // verificar archivo index.htm
+   if (!SD.exists("index.htm")) {
         Serial.println("ERROR - No encontrado index.htm!");
         return;
     }
@@ -335,4 +338,3 @@ char StrContains(char *str, char *sfind) {
     }
     return 0;
 }
-

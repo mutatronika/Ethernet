@@ -16,7 +16,7 @@
    Version 2.0
    home: http://crakensio.wordpress.com
    email: crazysarath8055@gmail.com
-  
+   Editado por gargamel 2026
   */
   
 #include <stdlib.h>
