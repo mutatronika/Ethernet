@@ -20,80 +20,93 @@
             request.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     if (this.responseXML != null) {
-                        // Obtener valores de gauges
-                        var panels = this.responseXML.getElementsByTagName('panel_gauge');
-                        var bateria = this.responseXML.getElementsByTagName('bateria_gauge');
-                        var pwm = this.responseXML.getElementsByTagName('pwm_gauge');
-                        
-                        if (panels.length > 0) {
-                            panel_gauge_val = parseInt(panels[0].childNodes[0].nodeValue);
-                            Gauge.Collection.get('panel_gauge').setValue(panel_gauge_val);
-                        }
-                        if (bateria.length > 0) {
-                            bateria_gauge_val = parseInt(bateria[0].childNodes[0].nodeValue);
-                            Gauge.Collection.get('bateria_gauge').setValue(bateria_gauge_val);
-                        }
-                        if (pwm.length > 0) {
-                            pwm_gauge_val = parseInt(pwm[0].childNodes[0].nodeValue);
-                            Gauge.Collection.get('pwm_gauge').setValue(pwm_gauge_val);
-                        }
-                        
-                        // Obtener voltajes
-                        var panel_volt = this.responseXML.getElementsByTagName('panel_volt');
-                        var bateria_volt = this.responseXML.getElementsByTagName('bateria_volt');
-                        var pwm_volt = this.responseXML.getElementsByTagName('pwm_volt');
-                        var ldr = this.responseXML.getElementsByTagName('ldr');
-                        
-                        if (panel_volt.length > 0) {
-                            document.getElementById('panel_volt').innerHTML = panel_volt[0].childNodes[0].nodeValue;
-                        }
-                        if (bateria_volt.length > 0) {
-                            document.getElementById('bateria_volt').innerHTML = bateria_volt[0].childNodes[0].nodeValue;
-                        }
-                        if (pwm_volt.length > 0) {
-                            document.getElementById('pwm_volt').innerHTML = pwm_volt[0].childNodes[0].nodeValue;
-                        }
-                        if (ldr.length > 0) {
-                            var ldr_val = parseInt(ldr[0].childNodes[0].nodeValue);
-                            document.getElementById('ldr_val').innerHTML = ldr_val;
-                            // Mostrar intensidad de luz
-                            var intensidad = (ldr_val / 10.23).toFixed(1) + "%";
-                            document.getElementById('ldr_intensity').innerHTML = intensidad;
-                        }
-                        
-                        // LEDs de control D6-D9
-                        var leds = this.responseXML.getElementsByTagName('LED');
-                        if (leds.length >= 4) {
-                            LED_D6 = (leds[0].childNodes[0].nodeValue === "on") ? 1 : 0;
-                            LED_D7 = (leds[1].childNodes[0].nodeValue === "on") ? 1 : 0;
-                            LED_D8 = (leds[2].childNodes[0].nodeValue === "on") ? 1 : 0;
-                            LED_D9 = (leds[3].childNodes[0].nodeValue === "on") ? 1 : 0;
+                        try {
+                            // Obtener valores de gauges
+                            var panels = this.responseXML.getElementsByTagName('panel_gauge');
+                            var bateria = this.responseXML.getElementsByTagName('bateria_gauge');
+                            var pwm = this.responseXML.getElementsByTagName('pwm_gauge');
                             
-                            document.getElementById('led_d6').checked = (LED_D6 === 1);
-                            document.getElementById('led_d7').checked = (LED_D7 === 1);
-                            document.getElementById('led_d8').innerHTML = LED_D8 === 1 ? "D8 - ON" : "D8 - OFF";
-                            document.getElementById('led_d9').innerHTML = LED_D9 === 1 ? "D9 - ON" : "D9 - OFF";
-                        }
+                            if (panels.length > 0) {
+                                panel_gauge_val = parseInt(panels[0].childNodes[0].nodeValue);
+                                if (typeof Gauge !== 'undefined' && Gauge.Collection) {
+                                    var g = Gauge.Collection.get('panel_gauge');
+                                    if (g) g.setValue(panel_gauge_val);
+                                }
+                            }
+                            if (bateria.length > 0) {
+                                bateria_gauge_val = parseInt(bateria[0].childNodes[0].nodeValue);
+                                if (typeof Gauge !== 'undefined' && Gauge.Collection) {
+                                    var g = Gauge.Collection.get('bateria_gauge');
+                                    if (g) g.setValue(bateria_gauge_val);
+                                }
+                            }
+                            if (pwm.length > 0) {
+                                pwm_gauge_val = parseInt(pwm[0].childNodes[0].nodeValue);
+                                if (typeof Gauge !== 'undefined' && Gauge.Collection) {
+                                    var g = Gauge.Collection.get('pwm_gauge');
+                                    if (g) g.setValue(pwm_gauge_val);
+                                }
+                            }
                         
-                        // LEDs de estado
-                        var led_red = this.responseXML.getElementsByTagName('LED_RED');
-                        var led_yellow = this.responseXML.getElementsByTagName('LED_YELLOW');
-                        var led_green = this.responseXML.getElementsByTagName('LED_GREEN');
-                        
-                        if (led_red.length > 0) {
-                            LED_RED = led_red[0].childNodes[0].nodeValue;
-                            var red_elem = document.getElementById('status_red');
-                            if (red_elem) red_elem.style.backgroundColor = (LED_RED === "on") ? "#ff4444" : "#ffaaaa";
-                        }
-                        if (led_yellow.length > 0) {
-                            LED_YELLOW = led_yellow[0].childNodes[0].nodeValue;
-                            var yellow_elem = document.getElementById('status_yellow');
-                            if (yellow_elem) yellow_elem.style.backgroundColor = (LED_YELLOW === "on") ? "#ffaa00" : "#ffffaa";
-                        }
-                        if (led_green.length > 0) {
-                            LED_GREEN = led_green[0].childNodes[0].nodeValue;
-                            var green_elem = document.getElementById('status_green');
-                            if (green_elem) green_elem.style.backgroundColor = (LED_GREEN === "on") ? "#44ff44" : "#aaffaa";
+                            // Obtener voltajes
+                            var panel_volt = this.responseXML.getElementsByTagName('panel_volt');
+                            var bateria_volt = this.responseXML.getElementsByTagName('bateria_volt');
+                            var pwm_volt = this.responseXML.getElementsByTagName('pwm_volt');
+                            var ldr = this.responseXML.getElementsByTagName('ldr');
+                            
+                            if (panel_volt.length > 0) {
+                                document.getElementById('panel_volt').innerHTML = panel_volt[0].childNodes[0].nodeValue;
+                            }
+                            if (bateria_volt.length > 0) {
+                                document.getElementById('bateria_volt').innerHTML = bateria_volt[0].childNodes[0].nodeValue;
+                            }
+                            if (pwm_volt.length > 0) {
+                                document.getElementById('pwm_volt').innerHTML = pwm_volt[0].childNodes[0].nodeValue;
+                            }
+                            if (ldr.length > 0) {
+                                var ldr_val = parseInt(ldr[0].childNodes[0].nodeValue);
+                                document.getElementById('ldr_val').innerHTML = ldr_val;
+                                // Mostrar intensidad de luz
+                                var intensidad = (ldr_val / 10.23).toFixed(1) + "%";
+                                document.getElementById('ldr_intensity').innerHTML = intensidad;
+                            }
+                            
+                            // LEDs de control D6-D9
+                            var leds = this.responseXML.getElementsByTagName('LED');
+                            if (leds.length >= 4) {
+                                LED_D6 = (leds[0].childNodes[0].nodeValue === "on") ? 1 : 0;
+                                LED_D7 = (leds[1].childNodes[0].nodeValue === "on") ? 1 : 0;
+                                LED_D8 = (leds[2].childNodes[0].nodeValue === "on") ? 1 : 0;
+                                LED_D9 = (leds[3].childNodes[0].nodeValue === "on") ? 1 : 0;
+                                
+                                document.getElementById('led_d6').checked = (LED_D6 === 1);
+                                document.getElementById('led_d7').checked = (LED_D7 === 1);
+                                document.getElementById('led_d8').innerHTML = LED_D8 === 1 ? "D8 - ON" : "D8 - OFF";
+                                document.getElementById('led_d9').innerHTML = LED_D9 === 1 ? "D9 - ON" : "D9 - OFF";
+                            }
+                            
+                            // LEDs de estado
+                            var led_red = this.responseXML.getElementsByTagName('LED_RED');
+                            var led_yellow = this.responseXML.getElementsByTagName('LED_YELLOW');
+                            var led_green = this.responseXML.getElementsByTagName('LED_GREEN');
+                            
+                            if (led_red.length > 0) {
+                                LED_RED = led_red[0].childNodes[0].nodeValue;
+                                var red_elem = document.getElementById('status_red');
+                                if (red_elem) red_elem.style.backgroundColor = (LED_RED === "on") ? "#ff4444" : "#ffaaaa";
+                            }
+                            if (led_yellow.length > 0) {
+                                LED_YELLOW = led_yellow[0].childNodes[0].nodeValue;
+                                var yellow_elem = document.getElementById('status_yellow');
+                                if (yellow_elem) yellow_elem.style.backgroundColor = (LED_YELLOW === "on") ? "#ffaa00" : "#ffffaa";
+                            }
+                            if (led_green.length > 0) {
+                                LED_GREEN = led_green[0].childNodes[0].nodeValue;
+                                var green_elem = document.getElementById('status_green');
+                                if (green_elem) green_elem.style.backgroundColor = (LED_GREEN === "on") ? "#44ff44" : "#aaffaa";
+                            }
+                        } catch(e) {
+                            console.error('Error procesando respuesta XML: ' + e.message);
                         }
                     }
                 }
@@ -104,7 +117,17 @@
             setTimeout('GetArduinoIO()', 1000);
         }
         
-        function toggleLED(pin) {
+        // Función de debug para consola
+        window.onload = function() {
+            console.log('Página cargada - Waiting for gauges and Arduino data...');
+            setTimeout(function() {
+                if (typeof Gauge !== 'undefined') {
+                    console.log('✓ Gauge library loaded');
+                } else {
+                    console.warn('✗ Gauge library NOT loaded - gauges will not display');
+                }
+            }, 500);
+        };
             var param = "&" + pin + "=" + (eval("LED_" + pin) === 1 ? 0 : 1);
             var request = new XMLHttpRequest();
             request.open("GET", "ajax_inputs" + param, true);
@@ -392,7 +415,7 @@
         }
     </style>
 </head>
-<body onload="GetArduinoIO()">
+<body onload="setTimeout(function() { GetArduinoIO(); }, 1500)">
     <div class="container">
         <h1>☀️ Monitor Panel Solar 12V</h1>
         
